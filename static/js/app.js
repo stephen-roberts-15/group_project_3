@@ -1,5 +1,5 @@
 // Place url in a constant variable
-const url = "http://127.0.0.1:5000/data" 
+const url = "http://127.0.0.1:5000/data"      
 
 // Fetch the JSON data and console log it
 d3.json(url).then(function(data) {
@@ -14,23 +14,23 @@ function init() {
 
 // Use D3 to get sample names and populate the drop-down selector
     d3.json(url).then((data) => {
-        
+        console.log(data)
 // Set a variable for the property names
-        let names = data.names;
+        let Boroughs = data.Boroughs;
 
 // Add  samples to dropdown menu
-        names.forEach((id) => {
+        Boroughs.forEach((Boroughs) => {
 
 // Log the value of id for each iteration of the loop
-            console.log(id);
+            console.log(Boroughs);
 
             dropdownMenu.append("option")
-            .text(id)
-            .property("value",id);
+            .text(Boroughs)
+            .property("value",Boroughs);
         });
 
 // Set the first sample from the list
-        let sample_one = names[0];
+        let sample_one = Boroughs[0];
 
 // Log the value of sample_one
         console.log(sample_one);
@@ -97,12 +97,12 @@ function buildBarChart(sample) {
         let Min_Nights = valueData.Min_Nights;
 
 // Log the data to the console
-        console.log(Boroughs,Prop_Type,Min_Nights);
+        console.log(Boroughs,Prop_Type);
 
 // Set top ten items to display in descending order
         let yticks = Boroughs.slice(0,10).map(id => `Boroughs ${id}`).reverse();
-        let xticks = Prop_Type.slice(0,10).reverse();
-        let labels = Boroughs.slice(0,10).reverse();
+        let xticks = Min_Nights.slice(0,10).reverse();
+        let labels = Prop_Type.slice(0,10).reverse();
         
 // Set up the trace for the bar chart
         let trace = {
