@@ -13,15 +13,11 @@ conn = sqlite3.connect('Airbnb.sqlite')
 #################################################
 # Flask Setup
 #################################################
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = '/static')
 @app.route("/")
 def welcome():
     # List all available api routes.
-    return (
-    f"Welcome to the Airbnb API!"
-    f"Available Routes:<br/>"
-    
-    )
+    return render_template('index.html')
 
 @app.route("/data")
 def get_data():
@@ -29,7 +25,7 @@ def get_data():
     df = pd.read_sql("Select * from Airbnb", con = conn)
     return jsonify(df.to_json())
     
-    
+# @app.route
 
 
 if __name__ == "__main__": 
