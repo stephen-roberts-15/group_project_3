@@ -9,42 +9,38 @@ d3.json(url).then(function(data) {
 // Initialize the dashboard at start up 
 function init() {
 
-// Use D3 to select the dropdown menu
-    let dropdownMenu = d3.select("#selDataset");
+ // Use D3 to select the dropdown menu
+ let dropdownMenu = d3.select("#selDataset");
+ // Use D3 to get the property numbers from the fetched JSON data
+ d3.json(url).then((data) => {
+   // Parse the JSON string into an object
+   const jsonData = JSON.parse(data);
+   // Get the property numbers from the parsed JSON object
+   let Boroughs = Object.values(jsonData.Boroughs);
+   console.log(Boroughs);
 
-// Use D3 to get sample names and populate the drop-down selector
-    d3.json(url).then((data) => {
-        console.log(data)
-// Set a variable for the property names
-        let Boroughs = data.Boroughs;
+   var unique_boroughs = Boroughs.filter((value, index, self) => self.indexOf(value) === index);
 
-// Add  samples to dropdown menu
-        Boroughs.forEach((Boroughs) => {
+   // Add boroughs to dropdown menu
+   unique_boroughs.forEach((Boroughs) => {
+     dropdownMenu.append("option")
+       .text(Boroughs)
+       .property("value", Boroughs);
+   });
+   // Set the first property from the list
+   let BoroughsOne = Boroughs[0];
+   // Log the value of propertyOne
+   console.log(BoroughsOne);
 
-// Log the value of id for each iteration of the loop
-            console.log(Boroughs);
-
-            dropdownMenu.append("option")
-            .text(Boroughs)
-            .property("value",Boroughs);
-        });
-
-// Set the first sample from the list
-        let sample_one = Boroughs[0];
-
-// Log the value of sample_one
-        console.log(sample_one);
-
-// Build the initial plots
-        buildMetadata(sample_one);
-        buildBarChart(sample_one);
-        buildBubbleChart(sample_one);
-
-    });
-};
+   // Build the initial plots
+   buildMetadata(BoroughsOne);
+   buildBarChart(BoroughsOne);
+   buildBubbleChart(BoroughsOne);
+ });
+}
 
 // Function that populates metadata info
-function buildMetadata(sample) {
+function buildMetadata(unique_boroughs) {
 
 // Use D3 to retrieve all of the data
     d3.json(url).then((data) => {
