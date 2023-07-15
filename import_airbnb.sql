@@ -1,8 +1,8 @@
 CREATE TABLE Airbnb (
 	index int unique primary key,
 	boroughs varchar(15) not null,
-	latitude float not null,
-	longitude float not null,
+	Latitude float not null,
+	Longitude float not null,
 	prop_type varchar(15) not null,
 	min_nights int,
 	Host_Listing_Cnt int,
