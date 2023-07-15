@@ -23,9 +23,11 @@ def welcome():
 def get_data():
     conn = sqlite3.connect('Airbnb.sqlite')
     df = pd.read_sql("Select * from Airbnb", con = conn)
-    return jsonify(df.to_json())
+    return jsonify(df.to_json(orient = 'records'))
     
-# @app.route
+@app.route("/map")
+def get_map():
+    return render_template('map.html')
 
 
 if __name__ == "__main__": 

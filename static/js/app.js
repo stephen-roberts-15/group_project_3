@@ -8,168 +8,119 @@ d3.json(url).then(function(data) {
 
 // Initialize the dashboard at start up 
 function init() {
-
-// Use D3 to select the dropdown menu
-    let dropdownMenu = d3.select("#selDataset");
-
-// Use D3 to get sample names and populate the drop-down selector
-    d3.json(url).then((data) => {
+        // Use D3 to select the dropdown menu
+        let dropdownMenu = d3.select("#selDataset");
         
-// Set a variable for the property names
-        let names = data.names;
+        // Use D3 to get the property numbers from the fetched JSON data
+        d3.json(url).then((data) => {
+          // Parse the JSON string into an object
+          const jsonData = JSON.parse(data);
+          // Get the property numbers from the parsed JSON object
+          let Boroughs =jsonData.Boroughs;
+          console.log(Boroughs);
 
-// Add  samples to dropdown menu
-        names.forEach((id) => {
-
-// Log the value of id for each iteration of the loop
-            console.log(id);
-
+          var unique_boroughs = jsonData.map(item => item.Boroughs).filter((value, index, self) => self.indexOf(value) === index);
+              
+              console.log(unique_boroughs);
+          // Add properties to dropdown menu
+          unique_boroughs.forEach((Boroughs) => {
             dropdownMenu.append("option")
-            .text(id)
-            .property("value",id);
+              .text(Boroughs)
+              .property("value", Boroughs);
+          });
+
+          //get unique boroughs
+          console.log(dropdownMenu)
+
+          // Set the first property from the list
+          let FirstBorough = unique_boroughs[0];
+          // Log the value of propertyOne
+          console.log(unique_boroughs);
+
+          
+          // Build the initial plots
+          filterProperties(FirstBorough);
+          buildPieChart(FirstBorough);
+         
+        //   displayProperties(FirstBorough);
+
         });
+      } 
 
-// Set the first sample from the list
-        let sample_one = names[0];
+const boroughSelect = document.getElementById('selDataset');
+boroughSelect.addEventListener('change', filterProperties);
+//function to filter based on dropdown
+function filterProperties() {
+        d3.json(url).then(function(data) {
+        const jsonData = JSON.parse(data);
+        console.log(jsonData);  
+       const selectedBorough = boroughSelect.value;
+       const filteredProperties = jsonData.filter(result => result.Boroughs === selectedBorough);
+       console.log(selectedBorough);
+       console.log(filteredProperties);
+       displayListingInfo(filteredProperties)
+});
+}
 
-// Log the value of sample_one
-        console.log(sample_one);
+// Function that populates propertly listing info 
+function displayListingInfo(properties) {
+        const propertyList = document.getElementById('propertyList');
+        
+        // Clear the existing list
+        propertyList.innerHTML = '';
 
-// Build the initial plots
-        buildMetadata(sample_one);
-        buildBarChart(sample_one);
-        buildBubbleChart(sample_one);
+        const averagePrice = calculateAveragePrice(properties);
+        const count = properties.length;
 
-    });
-};
+        const countListItem = document.createElement('li');
+        countListItem.textContent = `Count: ${count}`;
+        propertyList.appendChild(countListItem);
+      
+        const averagePriceListItem = document.createElement('li');
+        averagePriceListItem.textContent = `Average Price: $${averagePrice.toFixed(2)}`;
+        propertyList.appendChild(averagePriceListItem);
+        buildPieChart(properties);
+      }
 
-// Function that populates metadata info
-function buildMetadata(sample) {
+function calculateAveragePrice(properties) {
+        const prices = properties.map(property => property.Price);
+        const total = prices.reduce((accumulator, price) => accumulator + price, 0);
+        return total / properties.length;
+        
 
-// Use D3 to retrieve all of the data
-    d3.json(url).then((data) => {
-
-// Retrieve all metadata
-        let metadata = data.metadata;
-
-// Filter based on the value of the sample
-        let value = metadata.filter(result => result.id == sample);
-
-// Log the array of metadata objects after the have been filtered
-        console.log(value)
-
-// Get the first index from the array
-        let valueData = value[0];
-
-// Clear out metadata
-        d3.select("#sample-metadata").html("");
-
-// Use Object.entries to add each key/value pair to the panel
-        Object.entries(valueData).forEach(([key,value]) => {
-
-// Log the individual key/value pairs as they are being appended to the metadata panel
-            console.log(key,value);
-
-            d3.select("#sample-metadata").append("h5").text(`${key}: ${value}`);
+}
+function countPropertyTypes(properties) {
+        const propertyTypes = {};
+        properties.forEach(property => {
+          const propType = property.Prop_Type;
+          propertyTypes[propType] = (propertyTypes[propType] || 0) + 1;
         });
-    });
-
-};
+        return propertyTypes;
+      }
+      
 
 // Function that builds the bar chart
-function buildBarChart(sample) {
+function buildPieChart(properties) {
+        const propertyTypes = countPropertyTypes(properties);
 
-// Use D3 to retrieve all of the data
-    d3.json(url).then((data) => {
-
-// Retrieve all sample data
-        let sampleInfo = data.samples;
-
-// Filter based on the value of the sample
-        let value = sampleInfo.filter(result => result.id == sample);
-
-// Get the first index from the array
-        let valueData = value[0];
-
-// Get the ids, lables, and sample values
-        let Boroughs = valueData.Boroughs;
-        let Prop_Type = valueData.Prop_Type;
-        let Min_Nights = valueData.Min_Nights;
-
-// Log the data to the console
-        console.log(Boroughs,Prop_Type,Min_Nights);
-
-// Set top ten items to display in descending order
-        let yticks = Boroughs.slice(0,10).map(id => `Boroughs ${id}`).reverse();
-        let xticks = Prop_Type.slice(0,10).reverse();
-        let labels = Boroughs.slice(0,10).reverse();
+        const types = Object.keys(propertyTypes);
+        const counts = Object.values(propertyTypes);
         
-// Set up the trace for the bar chart
-        let trace = {
-            x: xticks,
-            y: yticks,
-            text: labels,
-            type: "bar",
-            orientation: "h"
+
+        // set up trace for pie chart
+        const trace = {
+                labels: types,
+                values: counts,
+                type: "pie"
         };
 
-// Setup the layout
-        let layout = {
-            title: "Number of Properties per Borough"
+        const layout = {
+                title: "Property types"
         };
 
-// Call Plotly to plot the bar chart
-        Plotly.newPlot("bar", [trace], layout)
-    });
-};
+        Plotly.newPlot("pie", [trace], layout);
+      }
 
-// Function that builds the bubble chart
-function buildBubbleChart(sample) {
-
-// Use D3 to retrieve all of the data
-    d3.json(url).then((data) => {
-        
-// Retrieve all sample data
-        let sampleInfo = data.samples;
-
-// Filter based on the value of the sample
-        let value = sampleInfo.filter(result => result.id == sample);
-
-// Get the first index from the array
-        let valueData = value[0];
-
-// Get the otu_ids, lables, and sample values
-        let otu_ids = valueData.otu_ids;
-        let otu_labels = valueData.otu_labels;
-        let sample_values = valueData.sample_values;
-
-// Log the data to the console
-        console.log(otu_ids,otu_labels,sample_values);
-        
-// Set up the trace for bubble chart
-        let trace1 = {
-            x: otu_ids,
-            y: sample_values,
-            text: otu_labels,
-            mode: "markers",
-            marker: {
-                size: sample_values,
-                color: otu_ids,
-                colorscale: "Earth"
-            }
-        };
-
-// Set up the layout
-        let layout = {
-            title: "Bacteria Per Sample",
-            hovermode: "closest",
-            xaxis: {title: "OTU ID"},
-        };
-
-// Call Plotly to plot the bubble chart
-        Plotly.newPlot("bubble", [trace1], layout)
-    });
-};
 
 // Function that updates dashboard when sample is changed
 function optionChanged(value) { 
@@ -179,9 +130,8 @@ function optionChanged(value) {
 
 // Call all functions 
     buildMetadata(value);
-    buildBarChart(value);
-    buildBubbleChart(value);
-   // buildGaugeChart(value);
+    buildPieChart(properties);
+;
 };
 
 // Call the initialize function
