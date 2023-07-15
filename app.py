@@ -30,7 +30,7 @@ def mappage():
 def get_data():
     conn = sqlite3.connect('Airbnb.sqlite')
     df = pd.read_sql("Select * from Airbnb", con = conn)
-    return jsonify(df.to_json(orient="records"orient = 'records'))
+    return jsonify(df.to_json(orient="records"))
     
 # @app.route
 
