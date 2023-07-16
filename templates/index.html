@@ -7,18 +7,34 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>AirBnB NYC</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    .map-button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: gray;
+      color: black;
+      border: none;
+      cursor: pointer;
+    }
+    .map-button:hover {
+      background-color: royalblue;
+    }
+  </style>
 </head>
 
 <body>
 
   <div class="container">
+
     <div class="row">
-      <div class="drow">
+      <div class="row">
         <canvas id="canvas" width="1175" height="350"> New York City Skyline </canvas>
-    </div>
+      </div>
       <div class="col-md-12 jumbotron text-center">
         <h1>Where to stay in NYC???</h1>
         <p>Use the interactive charts below to find your perfect New York getaway.</p>
+        <a href="http://127.0.0.1:5000/map_page" class="map-button">Go to Map</a>
       </div>
     </div>
     <div class="row">
@@ -48,7 +64,40 @@
         <div id="bubble"></div>
       </div>
     </div>
+    <div class="row">
+      <canvas id="barchart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const barchart = document.getElementById('barchart');
+      new Chart(barchart, {
+        type: 'bar',
+        data: {
+          labels: ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
+          datasets: [{
+            label: 'Number of Properties in Each Borough',
+            data: [891, 16410, 16062, 4640, 328],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    </script>
   </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="../static/js/app.js"></script>
+
+</body>
+
+</html>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
