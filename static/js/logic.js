@@ -15,7 +15,7 @@ function createFeatures(PropertyData) {
   // Define a function that we want to run once for each feature in the features array.
   // Give each feature a popup that describes the property type and Review Count of the properties.
   function onEachFeature(feature, layer) {
-    layer.bindPopup(`<h3>${"Property Type : "+feature.properties.Prop_Type}</h3><hr><p>${"Boroughs: "+feature.properties.Boroughs}</p><hr><p>${"Price: "+"$"+feature.properties.Price}</p><hr><p>${"Reviews: "+feature.properties.Review_Cnt}</p><hr><p>${"Days Available: "+feature.properties.Days_Available}</p>`)
+    layer.bindPopup(`<h3>${"Property Type : "+feature.properties.Prop_Type}</h3><hr><p>${"Boroughs: "+feature.properties.Boroughs}</p><hr><p>${"Price: "+"$"+feature.properties.Price}</p><hr><p>${" No. of Reviews: "+feature.properties.Review_Cnt}</p><hr><p>${"Days Available: "+feature.properties.Days_Available}</p>`)
 ;
   }
 
@@ -92,9 +92,9 @@ function createMap(Nyc_prop) {
 var legend = L.control({position: "bottomright"});
 legend.onAdd = function() {
   var div = L.DomUtil.create("div", "info legend"),
-  Price = [-50, 50, 150, 250, 350, 450];
+  Price = [0, 50, 150, 250, 350, 450];
   
-  div.innerHTML += "<h3 style='text-align: center'>Price</h3>"
+  div.innerHTML += "<h3 style='text-align: center'>Price ($)</h3>"
 
   for (var i =0; i < Price.length; i++) {
     div.innerHTML += 

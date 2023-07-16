@@ -117,7 +117,7 @@ function buildPieChart(properties) {
         };
 
         const layout = {
-                title: "Property types"
+                title: "Property Types"
         };
 
         Plotly.newPlot("pie", [trace], layout);
