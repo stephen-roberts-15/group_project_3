@@ -31,9 +31,10 @@ def get_data():
     conn = sqlite3.connect('Airbnb.sqlite')
     df = pd.read_sql("Select * from Airbnb", con = conn)
     return jsonify(df.to_json(orient="records"))
-    
-# @app.route
 
+@app.route("/map")
+def get_data1():
+   return map_data
 
 if __name__ == "__main__": 
 
