@@ -8,7 +8,7 @@ Project Members:
 
 Tools Used:
 
-We used FLASK framework to bring together Python,SQL Alchemy(Postgres),HTML,CSS and Java Script to create dynamic visulaisation in D3,
+We used FLASK framework to bring together Python,SQL Alchemy(Postgres),HTML,CSS and Java Script to create dynamic visulaisation in D3,Chart.js
 Plotly,Leaflet(map).
 
 Analysis of Dataset:
