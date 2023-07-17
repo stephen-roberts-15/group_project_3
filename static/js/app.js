@@ -139,7 +139,7 @@ function optionChanged(value) {
 const img = new Image();
 // User Variables - customize these to change the image being scrolled, its
 // direction, and the speed.
-img.src = "http://localhost:5000/static/Images/NYC_skyline.jpeg"
+img.src = "http://127.0.0.1:5000/static/Images/NYC_skyline.jpeg"
 const canvasXSize = 1175;
 const canvasYSize = 350;
 const speed = 30; // lower is faster
