@@ -1,5 +1,5 @@
 
-
+let propertyData;
 // Place url in a constant variable
 const url = "http://127.0.0.1:5000/data"      
 
@@ -17,6 +17,7 @@ function init() {
         d3.json(url).then((data) => {
           // Parse the JSON string into an object
           const jsonData = JSON.parse(data);
+          propertyData = jsonData
           // Get the property numbers from the parsed JSON object
           let Boroughs =jsonData.Boroughs;
           console.log(Boroughs);
@@ -93,7 +94,8 @@ function calculateAveragePrice(properties) {
 }
 function countPropertyTypes(properties) {
         const propertyTypes = {};
-        properties.forEach(property => {
+        console.log(properties)
+        propertyData.forEach(property => {
           const propType = property.Prop_Type;
           propertyTypes[propType] = (propertyTypes[propType] || 0) + 1;
         });
@@ -120,7 +122,7 @@ function buildPieChart(properties) {
                 title: "Property Types"
         };
 
-        Plotly.newPlot("pie", [trace], layout);
+        Plotly.newPlot("pie", [trace], layout,{responsive:true});
       }
 
 
